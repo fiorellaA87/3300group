@@ -10,8 +10,16 @@
 
     <p>
       <script>
-        d3.csv("data/player_data.csv").then(function(data){
 
+      Promise.all([
+        d3.csv("data/player_data.csv"),
+        d3.csv("data/Seasons_Stats.csv")
+      ]).then(function(data){
+          player_data = data[0].filter(d => d['year_end'] === "2018");
+          console.log(player_data);
+
+          season_stats = data[1].filter(d => d['Year'] === "2017");
+          console.log(season_stats);
         });
       </script>
     </p>
