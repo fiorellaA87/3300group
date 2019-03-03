@@ -7,7 +7,7 @@
   </head>
   <body>
 
-    <svg id = "bar_chart" height = "850" width = "550" >
+    <svg id = "bar_chart" height = "850" width = "700" >
 
     </svg>
 
@@ -68,7 +68,7 @@
 
 
           let bar_chart = d3.select("svg#bar_chart");
-          let chart = bar_chart.append("g").attr("transform", "translate(130,20)");
+          let chart = bar_chart.append("g").attr("transform", "translate(130,63)");
 
           let score_scale = d3.scaleLinear().domain([0, blk_stl_array[0]["value"] + .5]).range([0,380]);
           let player_scale = d3.scaleLinear().domain([20, 1]).range([800, 0]);
@@ -112,6 +112,69 @@
                 .attr("font-size", "10px")
                 .text(d["name"]);
           });
+          bar_chart.append("text")
+              .attr("text-anchor", "middle")
+              // .attr("transform", "translate(-50,210)rotate(-90)")
+              .attr("y", 12)
+              .attr("x", 58)
+              .attr("font-family","Palatino")
+              .attr("font-size", "14px")
+              .attr("font-weight", "bold")
+              .text("Player Name");
+
+          legend = bar_chart.append("g").attr("transform", "translate(530,60)");
+
+          legend.append("rect")
+              .attr("height", 100)
+              .attr("width", 160)
+              .attr("stroke", "black")
+              .style("fill", "transparent");
+
+          legend.append("rect")
+              .attr("height", 15)
+              .attr("width", 15)
+              .attr("stroke", "black")
+              .attr("x", 10)
+              .attr("y", 30)
+              .style("fill", "rgb(244, 101, 65)");
+
+          legend.append("rect")
+              .attr("height", 15)
+              .attr("width", 15)
+              .attr("stroke", "black")
+              .attr("x", 10)
+              .attr("y", 60)
+              .style("fill", "rgb(66, 134, 244)");
+
+          legend.append("text")
+              .attr("text-anchor", "middle")
+              // .attr("transform", "translate(-50,210)rotate(-90)")
+              .attr("y", 40)
+              .attr("x", 65)
+              .attr("font-family","Palatino")
+              .attr("font-size", "10px")
+              .text("Blocks Per Game");
+
+          legend.append("text")
+              .attr("text-anchor", "middle")
+              // .attr("transform", "translate(-50,210)rotate(-90)")
+              .attr("y", 70)
+              .attr("x", 91)
+              .attr("font-family","Palatino")
+              .attr("font-size", "10px")
+              .text("Normalized Steals Per Game");
+
+          legend.append("text")
+              .attr("text-anchor", "middle")
+              // .attr("transform", "translate(-50,210)rotate(-90)")
+              .attr("y", 15)
+              .attr("x", 78)
+              .attr("font-family","Palatino")
+              .attr("font-size", "14px")
+              .attr("font-weight", "bold")
+              .text("Legend");
+
+
 
           console.log(blk_stl_array)
         });
