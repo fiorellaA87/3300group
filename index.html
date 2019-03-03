@@ -6,8 +6,18 @@
     <script src="https://d3js.org/d3.v5.min.js"></script>
   </head>
   <body>
-    <p> <a href=""></a> </p>
 
+    <svg id = "bar_chart" height = "850" width = "550" >
+
+    </svg>
+
+    <svg id = "height_chart">
+
+    </svg>
+
+    <svg id = "silhouette">
+
+    </svg>
     <p>
       <script>
 
@@ -34,10 +44,8 @@
             steal_total += d['STL'];
           });
 
-          console.log(block_total)
-          console.log(steal_total)
+
           let maxBlock = d3.max(season_stats, d => d['BLK']);
-          console.log(maxBlock)
           let stl_blk_ratio = steal_total/block_total;
           let blk_stl_ratio = block_total/steal_total;
 
@@ -47,14 +55,64 @@
 
           season_stats.forEach(function(d, i) {
             BSPG = (d['steals_norm'] + d['BLK'])/ d['G'];
-            if(BSPG > 1.609){
-              blk_stl_array.push({"name": d['Player'], "value": BSPG, "blocks": d['BLK'], "steals": d['steals_norm']})
+            BPG = d['BLK']/ d['G'];
+            SPG = d['steals_norm']/ d['G'];
+            if(BSPG > 1.07){
+              blk_stl_array.push({"name": d['Player'], "value": BSPG, "blocks": d['BLK'], "steals": d['steals_norm'], "BPG": BPG, "SPG": SPG})
             };
           });
 
           blk_stl_array.sort(function(a, b) {
             return b.value - a.value;
           });
+
+
+          let bar_chart = d3.select("svg#bar_chart");
+          let chart = bar_chart.append("g").attr("transform", "translate(130,20)");
+
+          let score_scale = d3.scaleLinear().domain([0, blk_stl_array[0]["value"] + .5]).range([0,380]);
+          let player_scale = d3.scaleLinear().domain([20, 1]).range([800, 0]);
+
+          var x_axis = d3.axisBottom(score_scale).ticks(5, d3.format("f"))
+          var y_axis = d3.axisLeft(player_scale).ticks(20);
+
+          x_scale = bar_chart.append("g")
+              .attr("transform","translate(130,0)")
+              .call(x_axis);
+
+          y_scale = bar_chart.append("g")
+              .attr("transform","translate(130,20)")
+              .call(y_axis);
+
+          blk_stl_array.forEach(function(d, i){
+            chart.append("rect")
+                .attr("height", 15)
+                .attr("width", score_scale(d["BPG"]))
+                .attr("y", player_scale(i))
+                .style("fill", "rgb(244, 101, 65)")
+                .attr("stroke", "black")
+                .attr("stroke-width", "1");
+          });
+
+          blk_stl_array.forEach(function(d, i){
+            chart.append("rect")
+                .attr("height", 15)
+                .attr("width", score_scale(d["SPG"]))
+                .attr("x", score_scale(d["BPG"]))
+                .attr("y", player_scale(i))
+                .style("fill", "rgb(66, 134, 244)")
+                .attr("stroke", "black")
+                .attr("stroke-width", "1");
+            bar_chart.append("text")
+                .attr("text-anchor", "middle")
+                // .attr("transform", "translate(-50,210)rotate(-90)")
+                .attr("y", player_scale(i)+73)
+                .attr("x", 58)
+                .attr("font-family","Palatino")
+                .attr("font-size", "10px")
+                .text(d["name"]);
+          });
+
           console.log(blk_stl_array)
         });
       </script>
