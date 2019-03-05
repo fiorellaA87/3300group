@@ -8,12 +8,18 @@
   <body>
     <h1> Hello World</h1>
     <svg id = "bar_chart" height = "850" width = "700"></svg>
+    <svg id="person1" height="500" width= "300">
+      <rect height="300" width="200" style="stroke: none; fill:red"/>
+      <rect id="blue" height="300" width="100" style="stroke: none; fill:blue"/>
+      <image height="300" width="200" xlink:href="personoutlinepic.png"/>
+    </svg>
+
+    <svg id="person2" height="500" width= "300">
+      <rect height="400" width="300" style="stroke: none; fill:red"/>
+      <rect id="blue2" height="400" width="200" style="stroke: none; fill:blue"/>
+      <image height="400" width="300" xlink:href="personoutlinepic.png"/>
+    </svg>
     <p>
-      <svg id="person1" height="500" width= "300">
-        <rect height="300" width="200" style="stroke: none; fill:red"/>
-        <rect id="blue" height="300" width="100" style="stroke: none; fill:blue"/>
-        <image height="300" width="200" xlink:href="personoutlinepic.png"/>
-      </svg>
       <script>
 
       Promise.all([
@@ -234,10 +240,13 @@
           console.log(heightrange);
 
           //Steal and block percents for height range 69-74
-          let maxblkstl = Math.round(heightrange['69-74']['totalsteals'] + heightrange['69-74']['totalblocks'])
-          let stlperc1 = Math.round((heightrange['69-74']['totalsteals'] / maxblkstl ) * 100);
-          let blkperc1 = Math.round((heightrange['69-74']['totalblocks'] / maxblkstl) *100);
-          console.log(stlperc1, blkperc1, maxblkstl);
+          let maxblkstl = Math.round(heightrange['69-74']['totalblocks'] + heightrange['69-74']['totalsteals']);
+          // let stlperc1 = Math.round((heightrange['69-74']['totalsteals'] / maxblkstl ) * 100);
+          // let blkperc1 = Math.round((heightrange['69-74']['totalblocks'] / maxblkstl) *100);
+          // console.log(stlperc1, blkperc1, maxblkstl);
+          console.log(heightrange['69-74']['totalblocks']);
+          console.log(heightrange['69-74']['totalsteals']);
+          console.log(maxblkstl);
 
           //Steal and block percents for height range 75-80
           let maxblkstl2 = Math.round(heightrange['75-80']['totalsteals'] + heightrange['75-80']['totalblocks'])
@@ -252,12 +261,13 @@
           console.log(stlperc3, blkperc3, maxblkstl3);
 
 
+          let imgwidth1 = 200;
 
           let xscale= d3.scaleLinear()
-            .domain([0, 100])
-            .range([0, 200]);
+            .domain([0, maxblkstl])
+            .range([0, imgwidth1]);
 
-          d3.select("rect#blue").attr("width", xscale(68));
+          d3.select("rect#blue").attr("width", xscale(heightrange['69-74']['totalblocks'])); //blue is for blocks
 
         });
       </script>
