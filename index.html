@@ -207,14 +207,17 @@
 
           //silhouette
           heights = [];
+
+
           for (player in top_seventyfive) {
             heights.push(top_seventyfive[player]['height'])
           }
+
           let max_height = d3.max(heights);
           let min_height = d3.min(heights);
-          console.log(max_height, min_height);
-          // three height ranges are: 1) 69-74, 75-80, 81-87
-          let heightranges= {}
+          //console.log(max_height, min_height); //min: 72, max: 87
+
+          let heightrange= {}
           var count = 0;
           var totsteal = 0;
           var totblock = 0;
@@ -227,48 +230,48 @@
           var totblock3 = 0;
           var totsteal3 = 0;
 
-          for(var player in newarray){
+          for(var player in top_seventyfive){
 
-            if (newarray[player]['height'] >= 69 && newarray[player]['height'] <= 74){
-              totsteal = totsteal + newarray[player]['stl'];
-              totblock = totblock + newarray[player]['blk'];
+            if (top_seventyfive[player]['height'] >= 72 && top_seventyfive[player]['height'] <= 77){
+              totsteal = totsteal + top_seventyfive[player]['STL'];
+              totblock = totblock + top_seventyfive[player]['BLK'];
               count = count + 1;
-              heightrange['69-74']={'totalsteals': totsteal, 'totalblocks': totblock, 'count': count}
+              heightrange['72-77']={'totalsteals': totsteal, 'totalblocks': totblock, 'count': count}
             }
-            if (newarray[player]['height'] >= 75 && newarray[player]['height'] <= 80){
-              totsteal2 = totsteal2 + newarray[player]['stl'];
-              totblock2 = totblock2 + newarray[player]['blk'];
+            if (top_seventyfive[player]['height'] >= 78 && top_seventyfive[player]['height'] <= 83){
+              totsteal2 = totsteal2 + top_seventyfive[player]['STL'];
+              totblock2 = totblock2 + top_seventyfive[player]['BLK'];
               count2 = count2 + 1;
-              heightrange['75-80']= {'totalsteals': totsteal2, 'totalblocks': totblock2, 'count': count2}
+              heightrange['78-83']= {'totalsteals': totsteal2, 'totalblocks': totblock2, 'count': count2}
             }
-            if (newarray[player]['height'] >= 81 && newarray[player]['height'] <= 87){
-              totsteal3 = totsteal3 + newarray[player]['stl'];
-              totblock3 = totblock3 + newarray[player]['blk'];
+            if (top_seventyfive[player]['height'] >= 84 && top_seventyfive[player]['height'] <= 89){
+              totsteal3 = totsteal3 + top_seventyfive[player]['STL'];
+              totblock3 = totblock3 + top_seventyfive[player]['BLK'];
               count3 = count3 + 1;
-              heightrange['81-87']= {'totalsteals': totsteal3, 'totalblocks': totblock3, 'count': count3}
+              heightrange['84-89']= {'totalsteals': totsteal3, 'totalblocks': totblock3, 'count': count3}
             }
           }
           console.log(heightrange);
 
           //Steal and block percents for height range 69-74
-          let maxblkstl = Math.round(heightrange['69-74']['totalblocks'] + heightrange['69-74']['totalsteals']);
+          let maxblkstl = Math.round(heightrange['72-77']['totalblocks'] + heightrange['72-77']['totalsteals']);
           // let stlperc1 = Math.round((heightrange['69-74']['totalsteals'] / maxblkstl ) * 100);
           // let blkperc1 = Math.round((heightrange['69-74']['totalblocks'] / maxblkstl) *100);
           // console.log(stlperc1, blkperc1, maxblkstl);
-          console.log(heightrange['69-74']['totalblocks']);
-          console.log(heightrange['69-74']['totalsteals']);
+          console.log(heightrange['72-77']['totalblocks']);
+          console.log(heightrange['72-77']['totalsteals']);
           console.log(maxblkstl);
 
           //Steal and block percents for height range 75-80
-          let maxblkstl2 = Math.round(heightrange['75-80']['totalsteals'] + heightrange['75-80']['totalblocks'])
-          let stlperc2 = Math.round((heightrange['75-80']['totalsteals'] / maxblkstl2) * 100);
-          let blkperc2 = Math.round((heightrange['75-80']['totalblocks'] / maxblkstl2) * 100);
+          let maxblkstl2 = Math.round(heightrange['78-83']['totalsteals'] + heightrange['78-83']['totalblocks'])
+          let stlperc2 = Math.round((heightrange['78-83']['totalsteals'] / maxblkstl2) * 100);
+          let blkperc2 = Math.round((heightrange['78-83']['totalblocks'] / maxblkstl2) * 100);
           console.log(stlperc2, blkperc2,maxblkstl2);
 
           //Steal and block percents for height range 81-87
-          let maxblkstl3 = Math.round(heightrange['81-87']['totalsteals'] + heightrange['81-87']['totalblocks'])
-          let stlperc3 = Math.round((heightrange['81-87']['totalsteals'] / maxblkstl3) * 100);
-          let blkperc3 = Math.round((heightrange['81-87']['totalblocks'] / maxblkstl3) * 100);
+          let maxblkstl3 = Math.round(heightrange['84-89']['totalsteals'] + heightrange['84-89']['totalblocks'])
+          let stlperc3 = Math.round((heightrange['84-89']['totalsteals'] / maxblkstl3) * 100);
+          let blkperc3 = Math.round((heightrange['84-89']['totalblocks'] / maxblkstl3) * 100);
           console.log(stlperc3, blkperc3, maxblkstl3);
 
 
@@ -288,9 +291,9 @@
             .domain([0, maxblkstl3])
             .range([0, imgwidth3]);
 
-          d3.select("rect#blue").attr("width", xscale(heightrange['69-74']['totalblocks'])); //blue is for blocks
-          d3.select("rect#blue2").attr("width", xscale2(heightrange['75-80']['totalblocks'])); //blue is for blocks
-          d3.select("rect#blue3").attr("width", xscale3(heightrange['81-87']['totalblocks']));
+          d3.select("rect#blue").attr("width", xscale(heightrange['72-77']['totalblocks'])); //blue is for blocks
+          d3.select("rect#blue2").attr("width", xscale2(heightrange['78-83']['totalblocks'])); //blue is for blocks
+          d3.select("rect#blue3").attr("width", xscale3(heightrange['84-89']['totalblocks']));
 
         });
       </script>
