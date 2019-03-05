@@ -7,7 +7,7 @@
   </head>
   <body>
 
-    <svg id = "bar_chart" height ="850" width = "700"> </svg>
+    <svg id = "bar_chart" height ="650" width = "700"> </svg>
 
     <svg id="people" height="1000" width="1500">
       <svg id="person1" height="500" width= "300" x=100 y=300>
@@ -97,7 +97,7 @@
           let chart = bar_chart.append("g").attr("transform", "translate(130,63)");
 
           let score_scale = d3.scaleLinear().domain([0, top_seventyfive["Rudy Gobert"]["value"] + .2]).range([0,380]);
-          let player_scale = d3.scaleLinear().domain([20, 1]).range([800, 0]);
+          let player_scale = d3.scaleLinear().domain([20, 1]).range([600, 0]);
 
           let x_axis = d3.axisBottom(score_scale).ticks(5, d3.format("f"))
           let y_axis = d3.axisLeft(player_scale).ticks(20);
@@ -107,7 +107,7 @@
               .call(x_axis);
 
           y_scale = bar_chart.append("g")
-              .attr("transform","translate(130,20)")
+              .attr("transform","translate(130,31)")
               .call(y_axis);
 
           let i = 0;
@@ -137,8 +137,8 @@
                 // .attr("transform", "translate(-50,210)rotate(-90)")
                 .attr("y", player_scale(index)+73)
                 .attr("x", 58)
-                .attr("font-family","Palatino")
-                .attr("font-size", "10px")
+                .attr("font-family","Apple Ligothic")
+                .attr("font-size", "12px")
                 .text(top_seventyfive[person]["Player"]);
             index++;
           };
@@ -148,8 +148,8 @@
               // .attr("transform", "translate(-50,210)rotate(-90)")
               .attr("y", 12)
               .attr("x", 58)
-              .attr("font-family","Palatino")
-              .attr("font-size", "14px")
+              .attr("font-family","Apple Ligothic")
+              .attr("font-size", "12px")
               .attr("font-weight", "bold")
               .text("Player Name");
 
@@ -182,8 +182,8 @@
               // .attr("transform", "translate(-50,210)rotate(-90)")
               .attr("y", 40)
               .attr("x", 65)
-              .attr("font-family","Palatino")
-              .attr("font-size", "10px")
+              .attr("font-family","Apple Ligothic")
+              .attr("font-size", "12px")
               .text("Blocks Per Game");
 
           legend.append("text")
@@ -191,8 +191,8 @@
               // .attr("transform", "translate(-50,210)rotate(-90)")
               .attr("y", 70)
               .attr("x", 91)
-              .attr("font-family","Palatino")
-              .attr("font-size", "10px")
+              .attr("font-family","Apple Ligothic")
+              .attr("font-size", "12px")
               .text("Normalized Steals Per Game");
 
           legend.append("text")
@@ -200,8 +200,8 @@
               // .attr("transform", "translate(-50,210)rotate(-90)")
               .attr("y", 15)
               .attr("x", 78)
-              .attr("font-family","Palatino")
-              .attr("font-size", "14px")
+              .attr("font-family","Apple Ligothic")
+              .attr("font-size", "15px")
               .attr("font-weight", "bold")
               .text("Legend");
 
