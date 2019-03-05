@@ -21,7 +21,6 @@
         <rect id="blk2" height="500" width="250" style="stroke: none; fill:rgb(244, 101, 65)"/>
         <image height="500" width="250" xlink:href="sport copy.png"/>
       </svg>
-<<<<<<< HEAD
 
       <svg id="person3" height="600" width= "400" x=750 y=100>
         <rect height="600" width="300" style="stroke: none; fill:rgb(66, 134, 244)"/>
@@ -29,17 +28,7 @@
         <image height="600" width="300" xlink:href="sport copy 2.png"/>
       </svg>
     </svg>
-=======
-      <br/><br/>
-      <svg id="person3" height="500" width= "400">
-        <rect height="500" width="300" style="stroke: none; fill:red"/>
-        <rect id="blue3" height="500" width="200" style="stroke: none; fill:blue"/>
-        <image height="500" width="300" xlink:href="personoutlinepic2.png"/>
-      </svg>
-    </div>
->>>>>>> 0be4682821de446f9441735012dd90c4fb33b01f
 
-    <svg id="pie" height="700" width=800"></svg>
     <p>
       <script>
 
@@ -90,10 +79,10 @@
           top_people = season_stats.slice(0, 81);
 
           top_people.forEach( (d, i) => {
-            let nam = d['Player'];
-            let blocks = d['BLK'];
-            let steals = d['steals_norm'];
-            let height;
+            var nam = d['Player'];
+            var blocks = d['BLK'];
+            var steals = d['steals_norm'];
+            var height;
             player_data.forEach( (c, n) => {
               if (c['name'] == nam){
                 d['height'] = (Number(c['height'].substring(0,1)) * 12) + Number(c['height'].substring(2,4)) //convert height to inches;
@@ -110,8 +99,8 @@
           let score_scale = d3.scaleLinear().domain([0, top_seventyfive["Rudy Gobert"]["value"] + .2]).range([0,380]);
           let player_scale = d3.scaleLinear().domain([20, 1]).range([800, 0]);
 
-          let x_axis = d3.axisBottom(score_scale).ticks(5, d3.format("f"))
-          let y_axis = d3.axisLeft(player_scale).ticks(20);
+          var x_axis = d3.axisBottom(score_scale).ticks(5, d3.format("f"))
+          var y_axis = d3.axisLeft(player_scale).ticks(20);
 
           x_scale = bar_chart.append("g")
               .attr("transform","translate(130,0)")
@@ -122,7 +111,7 @@
               .call(y_axis);
 
           let i = 0;
-          for(person in top_seventyfive) {
+          for(var person in top_seventyfive) {
             chart.append("rect")
                 .attr("height", 15)
                 .attr("width", score_scale(top_seventyfive[person]["BPG"]))
@@ -134,7 +123,7 @@
           };
 
           let index = 0;
-            for(person in top_seventyfive) {
+            for(var person in top_seventyfive) {
             chart.append("rect")
                 .attr("height", 15)
                 .attr("width", score_scale(top_seventyfive[person]["SPG"]))
@@ -233,9 +222,9 @@
           var totsteal = 0;
           var totblock = 0;
 
-          let count2 = 0;
-          let totblock2 = 0;
-          let totsteal2= 0;
+          var count2 = 0;
+          var totblock2 = 0;
+          var totsteal2= 0;
 
           var count3 =0;
           var totblock3 = 0;
@@ -327,35 +316,6 @@
             .attr('y', 400)
             .text("Block %: " + blkperc2)
 
-          //PIE
-          heights_count = {}
-          for(i = 0; i < heights.length; i++) {
-            if (heights_count[heights[i]]) {
-              heights_count[heights[i]] += 1;
-            } else {
-              heights_count[heights[i]] = 1;
-            }
-          }
-          let counts = d3.entries(heights_count);
-          console.log(counts);
-
-          let svg = d3.select("svg#pie");
-          let radius = 250;
-          let arc = d3.arc()
-                      .innerRadius(radius - 90)
-                      .outerRadius(radius - 20)
-                      .cornerRadius(2)
-                      .padAngle(0.005);
-          let colorScale = d3.scaleOrdinal(d3.schemeCategory10);
-          let donutLayer = d3.pie().value(function(d) {return d.value;}).sort(null);
-          svg.append("g")
-              .attr("transform", "translate(550,350)")
-              .selectAll("arc")
-              .data(donutLayer(counts))
-              .enter()
-              .append("path")
-              .attr("fill", function(d, i) {return colorScale(d.data.key); })
-              .attr("d", arc);
         });
       </script>
     </p>
