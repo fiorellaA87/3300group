@@ -7,24 +7,20 @@
   </head>
   <body>
     <h1> Hello World</h1>
-    <svg id = "bar_chart" height = "850" width = "700" >
-
-    </svg>
-
-    <svg id = "height_chart">
-
-    </svg>
-
-    <svg id = "silhouette">
-
-    </svg>
+    <svg id = "bar_chart" height = "850" width = "700"></svg>
     <p>
+      <svg id="person1" height="500" width= "300">
+        <rect height="300" width="200" style="stroke: none; fill:red"/>
+        <rect id="blue" height="300" width="100" style="stroke: none; fill:blue"/>
+        <image height="300" width="200" xlink:href="personoutlinepic.png"/>
+      </svg>
       <script>
 
       Promise.all([
         d3.csv("data/player_data.csv"),
         d3.csv("data/Seasons_Stats.csv")
       ]).then(function(data){
+          //FILTERING OF DATA
           player_data = data[0].filter(d => d['year_end'] === "2018");
           // console.log(player_data);
 
@@ -66,7 +62,7 @@
             return b.value - a.value;
           });
 
-
+          //BAR GRAPH
           let bar_chart = d3.select("svg#bar_chart");
           let chart = bar_chart.append("g").attr("transform", "translate(130,63)");
 
@@ -174,9 +170,95 @@
               .attr("font-weight", "bold")
               .text("Legend");
 
+          // console.log(blk_stl_array)
+          //silhouette
+          player_data.forEach( (d, i) => {
+            d['height'] = (Number(d['height'].substring(0,1)) * 12) + Number(d['height'].substring(2,4)) //convert height to inches
+          })
+
+          let heightrange = d3.extent(player_data.map(function(item){
+            return (item['height'])
+          }));
+
+          //Array of players as key with their heights, steals, blocks
+          let newarray = {};
+          season_stats.forEach( (d, i) => {
+            var nam = d['Player'];
+            var blocks = d['BLK'];
+            var steals = d['steals_norm'];
+            var height;
+            player_data.forEach( (c, n) => {
+              if (c['name'] == nam){
+                height = c['height'];
+                newarray[nam]={'blk': blocks, 'stl': steals, 'height': height}
+              }
+            })
+          });
+          console.log(newarray);
+
+          // three height ranges are: 1) 69-74, 75-80, 81-87
+          let heightranges= {}
+          var count = 0;
+          var totsteal = 0;
+          var totblock = 0;
+
+          var count2 = 0;
+          var totblock2 = 0;
+          var totsteal2= 0;
+
+          var count3 =0;
+          var totblock3 = 0;
+          var totsteal3 = 0;
+
+          for(var player in newarray){
+
+            if (newarray[player]['height'] >= 69 && newarray[player]['height'] <= 74){
+              totsteal = totsteal + newarray[player]['stl'];
+              totblock = totblock + newarray[player]['blk'];
+              count = count + 1;
+              heightrange['69-74']={'totalsteals': totsteal, 'totalblocks': totblock, 'count': count}
+            }
+            if (newarray[player]['height'] >= 75 && newarray[player]['height'] <= 80){
+              totsteal2 = totsteal2 + newarray[player]['stl'];
+              totblock2 = totblock2 + newarray[player]['blk'];
+              count2 = count2 + 1;
+              heightrange['75-80']= {'totalsteals': totsteal2, 'totalblocks': totblock2, 'count': count2}
+            }
+            if (newarray[player]['height'] >= 81 && newarray[player]['height'] <= 87){
+              totsteal3 = totsteal3 + newarray[player]['stl'];
+              totblock3 = totblock3 + newarray[player]['blk'];
+              count3 = count3 + 1;
+              heightrange['81-87']= {'totalsteals': totsteal3, 'totalblocks': totblock3, 'count': count3}
+            }
+          }
+          console.log(heightrange);
+
+          //Steal and block percents for height range 69-74
+          let maxblkstl = Math.round(heightrange['69-74']['totalsteals'] + heightrange['69-74']['totalblocks'])
+          let stlperc1 = Math.round((heightrange['69-74']['totalsteals'] / maxblkstl ) * 100);
+          let blkperc1 = Math.round((heightrange['69-74']['totalblocks'] / maxblkstl) *100);
+          console.log(stlperc1, blkperc1, maxblkstl);
+
+          //Steal and block percents for height range 75-80
+          let maxblkstl2 = Math.round(heightrange['75-80']['totalsteals'] + heightrange['75-80']['totalblocks'])
+          let stlperc2 = Math.round((heightrange['75-80']['totalsteals'] / maxblkstl2) * 100);
+          let blkperc2 = Math.round((heightrange['75-80']['totalblocks'] / maxblkstl2) * 100);
+          console.log(stlperc2, blkperc2,maxblkstl2);
+
+          //Steal and block percents for height range 81-87
+          let maxblkstl3 = Math.round(heightrange['81-87']['totalsteals'] + heightrange['81-87']['totalblocks'])
+          let stlperc3 = Math.round((heightrange['81-87']['totalsteals'] / maxblkstl3) * 100);
+          let blkperc3 = Math.round((heightrange['81-87']['totalblocks'] / maxblkstl3) * 100);
+          console.log(stlperc3, blkperc3, maxblkstl3);
 
 
-          console.log(blk_stl_array)
+
+          let xscale= d3.scaleLinear()
+            .domain([0, 100])
+            .range([0, 200]);
+
+          d3.select("rect#blue").attr("width", xscale(68));
+
         });
       </script>
     </p>
