@@ -76,6 +76,7 @@
           });
 
           top_seventyfive = season_stats.slice(0, 75);
+          console.log(top_seventyfive);
 
           //BAR GRAPH
           let bar_chart = d3.select("svg#bar_chart");
@@ -196,7 +197,7 @@
 
           //Array of players as key with their heights, steals, blocks
           let newarray = {};
-          season_stats.forEach( (d, i) => {
+          top_seventyfive.forEach( (d, i) => {
             var nam = d['Player'];
             var blocks = d['BLK'];
             var steals = d['steals_norm'];
