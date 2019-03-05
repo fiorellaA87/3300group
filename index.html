@@ -7,27 +7,27 @@
   </head>
   <body>
 
-    <svg id = "bar_chart" height = "850" width = "700"> </svg>
+    <svg id = "bar_chart" height ="850" width = "700"> </svg>
 
-    <div id="people">
-      <svg id="person1" height="500" width= "300">
-        <rect height="300" width="200" style="stroke: none; fill:red"/>
-        <rect id="blue" height="300" width="200" style="stroke: none; fill:blue"/>
-        <image height="300" width="200" xlink:href="personoutlinepic.png"/>
+    <svg id="people" height="1000" width="1500">
+      <svg id="person1" height="500" width= "300" x=100 y=300>
+        <rect height="400" width="200" style="stroke: none; fill:rgb(66, 134, 244)"/>
+        <rect id="blk1" height="400" width="200" style="stroke: none; fill:rgb(244, 101, 65)"/>
+        <image height="400" width="200" xlink:href="sport.png"/>
       </svg>
 
-      <svg id="person2" height="500" width= "300">
-        <rect height="400" width="200" style="stroke: none; fill:red"/>
-        <rect id="blue2" height="400" width="" style="stroke: none; fill:blue"/>
-        <image height="400" width="200" xlink:href="personoutlinepic_copy.png"/>
+      <svg id="person2" height="500" width= "300" x=400 y=200>
+        <rect height="500" width="250" style="stroke: none; fill:rgb(66, 134, 244)"/>
+        <rect id="blk2" height="500" width="250" style="stroke: none; fill:rgb(244, 101, 65)"/>
+        <image height="500" width="250" xlink:href="sport copy.png"/>
       </svg>
 
-      <svg id="person3" height="500" width= "400">
-        <rect height="500" width="300" style="stroke: none; fill:red"/>
-        <rect id="blue3" height="500" width="200" style="stroke: none; fill:blue"/>
-        <image height="500" width="300" xlink:href="personoutlinepic2.png"/>
+      <svg id="person3" height="600" width= "400" x=750 y=100>
+        <rect height="600" width="300" style="stroke: none; fill:rgb(66, 134, 244)"/>
+        <rect id="blk3" height="600" width="300" style="stroke: none; fill:rgb(244, 101, 65)"/>
+        <image height="600" width="300" xlink:href="sport copy 2.png"/>
       </svg>
-  </div>
+    </svg>
 
     <p>
       <script>
@@ -256,11 +256,11 @@
           //Steal and block percents for height range 69-74
           let maxblkstl = Math.round(heightrange['72-77']['totalblocks'] + heightrange['72-77']['totalsteals']);
           // let stlperc1 = Math.round((heightrange['69-74']['totalsteals'] / maxblkstl ) * 100);
-          // let blkperc1 = Math.round((heightrange['69-74']['totalblocks'] / maxblkstl) *100);
+          let blkperc1 = Math.round((heightrange['72-77']['totalblocks'] / maxblkstl) *100);
           // console.log(stlperc1, blkperc1, maxblkstl);
-          console.log(heightrange['72-77']['totalblocks']);
-          console.log(heightrange['72-77']['totalsteals']);
-          console.log(maxblkstl);
+          // console.log(heightrange['72-77']['totalblocks']);
+          // console.log(heightrange['72-77']['totalsteals']);
+          // console.log(maxblkstl);
 
           //Steal and block percents for height range 75-80
           let maxblkstl2 = Math.round(heightrange['78-83']['totalsteals'] + heightrange['78-83']['totalblocks'])
@@ -279,6 +279,12 @@
           let imgwidth2 = 300;
           let imgwidth3 = 300;
 
+          console.log(blkperc1);
+          console.log(blkperc2);
+          console.log(blkperc3);
+
+
+
           let xscale= d3.scaleLinear()
             .domain([0, maxblkstl])
             .range([0, imgwidth1]);
@@ -291,9 +297,24 @@
             .domain([0, maxblkstl3])
             .range([0, imgwidth3]);
 
-          d3.select("rect#blue").attr("width", xscale(heightrange['72-77']['totalblocks'])); //blue is for blocks
-          d3.select("rect#blue2").attr("width", xscale2(heightrange['78-83']['totalblocks'])); //blue is for blocks
-          d3.select("rect#blue3").attr("width", xscale3(heightrange['84-89']['totalblocks']));
+          d3.select("rect#blk1").attr("width", xscale(heightrange['72-77']['totalblocks'])); //blue is for blocks
+          d3.select("rect#blk2").attr("width", xscale2(heightrange['78-83']['totalblocks'])); //blue is for blocks
+          d3.select("rect#blk3").attr("width", xscale3(heightrange['84-89']['totalblocks']));
+
+          // console.log(xscale2(heightrange['78-83']['totalblocks']));
+          // console.log(xscale3(heightrange['84-89']['totalblocks']));
+
+          let ppl = d3.select("svg#people");
+
+          ppl.append("text")
+            .attr('x', 40)
+            .attr('y', 600)
+            .text("Block %: " + blkperc1);
+
+          ppl.append("text")
+            .attr('x', 390)
+            .attr('y', 400)
+            .text("Block %: " + blkperc2)
 
         });
       </script>
