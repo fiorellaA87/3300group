@@ -6,19 +6,29 @@
     <script src="https://d3js.org/d3.v5.min.js"></script>
   </head>
   <body>
-    <h1> Hello World</h1>
-    <svg id = "bar_chart" height = "850" width = "700"></svg>
-    <svg id="person1" height="500" width= "300">
-      <rect height="300" width="200" style="stroke: none; fill:red"/>
-      <rect id="blue" height="300" width="100" style="stroke: none; fill:blue"/>
-      <image height="300" width="200" xlink:href="personoutlinepic.png"/>
-    </svg>
 
-    <svg id="person2" height="500" width= "300">
-      <rect height="400" width="300" style="stroke: none; fill:red"/>
-      <rect id="blue2" height="400" width="200" style="stroke: none; fill:blue"/>
-      <image height="400" width="300" xlink:href="personoutlinepic.png"/>
-    </svg>
+    <svg id = "bar_chart" height = "850" width = "700"> </svg>
+
+    <div id="people">
+      <svg id="person1" height="500" width= "300">
+        <rect height="300" width="200" style="stroke: none; fill:red"/>
+        <rect id="blue" height="300" width="200" style="stroke: none; fill:blue"/>
+        <image height="300" width="200" xlink:href="personoutlinepic.png"/>
+      </svg>
+
+      <svg id="person2" height="500" width= "300">
+        <rect height="400" width="300" style="stroke: none; fill:red"/>
+        <rect id="blue2" height="400" width="" style="stroke: none; fill:blue"/>
+        <image height="400" width="300" xlink:href="personoutlinepic_copy.png"/>
+      </svg>
+
+      <svg id="person3" height="500" width= "400">
+        <rect height="500" width="400" style="stroke: none; fill:red"/>
+        <rect id="blue3" height="500" width="400" style="stroke: none; fill:blue"/>
+        <image height="500" width="400" xlink:href="personoutlinepic2.png"/>
+      </svg>
+  </div>
+
     <p>
       <script>
 
@@ -33,7 +43,7 @@
           season_stats = data[1].filter(d => d['Year'] === "2017" && d['G'] > 50);
           // console.log(season_stats);
 
-          let blk_stl_array = [];
+          let top_seventyfive = [];
           let blk_array = [];
           let block_total = 0;
           let steal_total = 0;
@@ -56,23 +66,22 @@
           });
 
           season_stats.forEach(function(d, i) {
-            BSPG = (d['steals_norm'] + d['BLK'])/ d['G'];
-            BPG = d['BLK']/ d['G'];
-            SPG = d['steals_norm']/ d['G'];
-            if(BSPG > 1.07){
-              blk_stl_array.push({"name": d['Player'], "value": BSPG, "blocks": d['BLK'], "steals": d['steals_norm'], "BPG": BPG, "SPG": SPG})
-            };
+            d['value'] = (d['steals_norm'] + d['BLK'])/ d['G'];
+            d['BPG'] = d['BLK']/ d['G'];
+            d['SPG'] = d['steals_norm']/ d['G'];
           });
 
-          blk_stl_array.sort(function(a, b) {
+          season_stats.sort(function(a, b) {
             return b.value - a.value;
           });
+
+          top_seventyfive = season_stats.slice(0, 75);
 
           //BAR GRAPH
           let bar_chart = d3.select("svg#bar_chart");
           let chart = bar_chart.append("g").attr("transform", "translate(130,63)");
 
-          let score_scale = d3.scaleLinear().domain([0, blk_stl_array[0]["value"] + .5]).range([0,380]);
+          let score_scale = d3.scaleLinear().domain([0, top_seventyfive[0]["value"] + .2]).range([0,380]);
           let player_scale = d3.scaleLinear().domain([20, 1]).range([800, 0]);
 
           var x_axis = d3.axisBottom(score_scale).ticks(5, d3.format("f"))
@@ -86,7 +95,7 @@
               .attr("transform","translate(130,20)")
               .call(y_axis);
 
-          blk_stl_array.forEach(function(d, i){
+          top_seventyfive.forEach(function(d, i){
             chart.append("rect")
                 .attr("height", 15)
                 .attr("width", score_scale(d["BPG"]))
@@ -96,7 +105,7 @@
                 .attr("stroke-width", "1");
           });
 
-          blk_stl_array.forEach(function(d, i){
+          top_seventyfive.forEach(function(d, i){
             chart.append("rect")
                 .attr("height", 15)
                 .attr("width", score_scale(d["SPG"]))
@@ -112,7 +121,7 @@
                 .attr("x", 58)
                 .attr("font-family","Palatino")
                 .attr("font-size", "10px")
-                .text(d["name"]);
+                .text(d["Player"]);
           });
           bar_chart.append("text")
               .attr("text-anchor", "middle")
@@ -176,7 +185,6 @@
               .attr("font-weight", "bold")
               .text("Legend");
 
-          // console.log(blk_stl_array)
           //silhouette
           player_data.forEach( (d, i) => {
             d['height'] = (Number(d['height'].substring(0,1)) * 12) + Number(d['height'].substring(2,4)) //convert height to inches
@@ -262,12 +270,24 @@
 
 
           let imgwidth1 = 200;
+          let imgwidth2 = 300;
+          let imgwidth3 = 400;
 
           let xscale= d3.scaleLinear()
             .domain([0, maxblkstl])
             .range([0, imgwidth1]);
 
+          let xscale2= d3.scaleLinear()
+            .domain([0, maxblkstl])
+            .range([0, imgwidth2]);
+
+          let xscale3= d3.scaleLinear()
+            .domain([0, maxblkstl])
+            .range([0, imgwidth3]);
+
           d3.select("rect#blue").attr("width", xscale(heightrange['69-74']['totalblocks'])); //blue is for blocks
+          d3.select("rect#blue2").attr("width", xscale2(heightrange['75-80']['totalblocks'])); //blue is for blocks
+          d3.select("rect#blue3").attr("width", xscale3(heightrange['81-87']['totalblocks']));
 
         });
       </script>
