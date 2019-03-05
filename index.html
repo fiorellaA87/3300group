@@ -27,8 +27,9 @@
         <rect id="blue3" height="500" width="200" style="stroke: none; fill:blue"/>
         <image height="500" width="300" xlink:href="personoutlinepic2.png"/>
       </svg>
-  </div>
+    </div>
 
+    <svg id="pie" height="600" width="600"></svg>
     <p>
       <script>
 
@@ -79,10 +80,10 @@
           top_people = season_stats.slice(0, 81);
 
           top_people.forEach( (d, i) => {
-            var nam = d['Player'];
-            var blocks = d['BLK'];
-            var steals = d['steals_norm'];
-            var height;
+            let nam = d['Player'];
+            let blocks = d['BLK'];
+            let steals = d['steals_norm'];
+            let height;
             player_data.forEach( (c, n) => {
               if (c['name'] == nam){
                 d['height'] = (Number(c['height'].substring(0,1)) * 12) + Number(c['height'].substring(2,4)) //convert height to inches;
@@ -99,8 +100,8 @@
           let score_scale = d3.scaleLinear().domain([0, top_seventyfive["Rudy Gobert"]["value"] + .2]).range([0,380]);
           let player_scale = d3.scaleLinear().domain([20, 1]).range([800, 0]);
 
-          var x_axis = d3.axisBottom(score_scale).ticks(5, d3.format("f"))
-          var y_axis = d3.axisLeft(player_scale).ticks(20);
+          let x_axis = d3.axisBottom(score_scale).ticks(5, d3.format("f"))
+          let y_axis = d3.axisLeft(player_scale).ticks(20);
 
           x_scale = bar_chart.append("g")
               .attr("transform","translate(130,0)")
@@ -111,7 +112,7 @@
               .call(y_axis);
 
           let i = 0;
-          for(var person in top_seventyfive) {
+          for(person in top_seventyfive) {
             chart.append("rect")
                 .attr("height", 15)
                 .attr("width", score_scale(top_seventyfive[person]["BPG"]))
@@ -123,7 +124,7 @@
           };
 
           let index = 0;
-            for(var person in top_seventyfive) {
+            for(person in top_seventyfive) {
             chart.append("rect")
                 .attr("height", 15)
                 .attr("width", score_scale(top_seventyfive[person]["SPG"]))
@@ -215,20 +216,19 @@
           console.log(max_height, min_height);
           // three height ranges are: 1) 69-74, 75-80, 81-87
           let heightranges= {}
-          var count = 0;
-          var totsteal = 0;
-          var totblock = 0;
+          let count = 0;
+          let totsteal = 0;
+          let totblock = 0;
 
-          var count2 = 0;
-          var totblock2 = 0;
-          var totsteal2= 0;
+          let count2 = 0;
+          let totblock2 = 0;
+          let totsteal2= 0;
 
-          var count3 =0;
-          var totblock3 = 0;
-          var totsteal3 = 0;
+          let count3 =0;
+          let totblock3 = 0;
+          let totsteal3 = 0;
 
-          for(var player in newarray){
-
+          for(player in newarray){
             if (newarray[player]['height'] >= 69 && newarray[player]['height'] <= 74){
               totsteal = totsteal + newarray[player]['stl'];
               totblock = totblock + newarray[player]['blk'];
@@ -292,6 +292,16 @@
           d3.select("rect#blue2").attr("width", xscale2(heightrange['75-80']['totalblocks'])); //blue is for blocks
           d3.select("rect#blue3").attr("width", xscale3(heightrange['81-87']['totalblocks']));
 
+          //PIE
+          let radius = 300;
+          let arc = d3.svg.arc().innerRadius(radius - 100).outerRadius(radius - 20);
+          let colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+          let donutChart = d3.select("svg#pie");
+          let donutLayer = d3.layout.pie();
+          svg.append("g")
+              .datum(heights)
+              .attr("fill", function(d, i) {return colorScale(i);})
+              .attr("d", arc);
         });
       </script>
     </p>
