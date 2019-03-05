@@ -17,15 +17,15 @@
       </svg>
 
       <svg id="person2" height="500" width= "300">
-        <rect height="400" width="300" style="stroke: none; fill:red"/>
+        <rect height="400" width="200" style="stroke: none; fill:red"/>
         <rect id="blue2" height="400" width="" style="stroke: none; fill:blue"/>
-        <image height="400" width="300" xlink:href="personoutlinepic_copy.png"/>
+        <image height="400" width="200" xlink:href="personoutlinepic_copy.png"/>
       </svg>
 
       <svg id="person3" height="500" width= "400">
-        <rect height="500" width="400" style="stroke: none; fill:red"/>
-        <rect id="blue3" height="500" width="400" style="stroke: none; fill:blue"/>
-        <image height="500" width="400" xlink:href="personoutlinepic2.png"/>
+        <rect height="500" width="300" style="stroke: none; fill:red"/>
+        <rect id="blue3" height="500" width="200" style="stroke: none; fill:blue"/>
+        <image height="500" width="300" xlink:href="personoutlinepic2.png"/>
       </svg>
   </div>
 
@@ -43,7 +43,8 @@
           season_stats = data[1].filter(d => d['Year'] === "2017" && d['G'] > 50);
           // console.log(season_stats);
 
-          let top_seventyfive = [];
+          let top_people = [];
+          let top_seventyfive = {};
           let blk_array = [];
           let block_total = 0;
           let steal_total = 0;
@@ -75,14 +76,27 @@
             return b.value - a.value;
           });
 
-          top_seventyfive = season_stats.slice(0, 75);
-          console.log(top_seventyfive);
+          top_people = season_stats.slice(0, 81);
+
+          top_people.forEach( (d, i) => {
+            var nam = d['Player'];
+            var blocks = d['BLK'];
+            var steals = d['steals_norm'];
+            var height;
+            player_data.forEach( (c, n) => {
+              if (c['name'] == nam){
+                d['height'] = (Number(c['height'].substring(0,1)) * 12) + Number(c['height'].substring(2,4)) //convert height to inches;
+                height = c['height'];
+                top_seventyfive[nam]= d;
+              }
+            })
+          });
 
           //BAR GRAPH
           let bar_chart = d3.select("svg#bar_chart");
           let chart = bar_chart.append("g").attr("transform", "translate(130,63)");
 
-          let score_scale = d3.scaleLinear().domain([0, top_seventyfive[0]["value"] + .2]).range([0,380]);
+          let score_scale = d3.scaleLinear().domain([0, top_seventyfive["Rudy Gobert"]["value"] + .2]).range([0,380]);
           let player_scale = d3.scaleLinear().domain([20, 1]).range([800, 0]);
 
           var x_axis = d3.axisBottom(score_scale).ticks(5, d3.format("f"))
@@ -96,34 +110,39 @@
               .attr("transform","translate(130,20)")
               .call(y_axis);
 
-          top_seventyfive.forEach(function(d, i){
+          let i = 0;
+          for(var person in top_seventyfive) {
             chart.append("rect")
                 .attr("height", 15)
-                .attr("width", score_scale(d["BPG"]))
+                .attr("width", score_scale(top_seventyfive[person]["BPG"]))
                 .attr("y", player_scale(i))
                 .style("fill", "rgb(244, 101, 65)")
                 .attr("stroke", "black")
                 .attr("stroke-width", "1");
-          });
+            i++;
+          };
 
-          top_seventyfive.forEach(function(d, i){
+          let index = 0;
+            for(var person in top_seventyfive) {
             chart.append("rect")
                 .attr("height", 15)
-                .attr("width", score_scale(d["SPG"]))
-                .attr("x", score_scale(d["BPG"]))
-                .attr("y", player_scale(i))
+                .attr("width", score_scale(top_seventyfive[person]["SPG"]))
+                .attr("x", score_scale(top_seventyfive[person]["BPG"]))
+                .attr("y", player_scale(index))
                 .style("fill", "rgb(66, 134, 244)")
                 .attr("stroke", "black")
                 .attr("stroke-width", "1");
             bar_chart.append("text")
                 .attr("text-anchor", "middle")
                 // .attr("transform", "translate(-50,210)rotate(-90)")
-                .attr("y", player_scale(i)+73)
+                .attr("y", player_scale(index)+73)
                 .attr("x", 58)
                 .attr("font-family","Palatino")
                 .attr("font-size", "10px")
-                .text(d["Player"]);
-          });
+                .text(top_seventyfive[person]["Player"]);
+            index++;
+          };
+
           bar_chart.append("text")
               .attr("text-anchor", "middle")
               // .attr("transform", "translate(-50,210)rotate(-90)")
@@ -187,30 +206,13 @@
               .text("Legend");
 
           //silhouette
-          player_data.forEach( (d, i) => {
-            d['height'] = (Number(d['height'].substring(0,1)) * 12) + Number(d['height'].substring(2,4)) //convert height to inches
-          })
-
-          let heightrange = d3.extent(player_data.map(function(item){
-            return (item['height'])
-          }));
-
-          //Array of players as key with their heights, steals, blocks
-          let newarray = {};
-          top_seventyfive.forEach( (d, i) => {
-            var nam = d['Player'];
-            var blocks = d['BLK'];
-            var steals = d['steals_norm'];
-            var height;
-            player_data.forEach( (c, n) => {
-              if (c['name'] == nam){
-                height = c['height'];
-                newarray[nam]={'blk': blocks, 'stl': steals, 'height': height}
-              }
-            })
-          });
-          console.log(newarray);
-
+          heights = [];
+          for (player in top_seventyfive) {
+            heights.push(top_seventyfive[player]['height'])
+          }
+          let max_height = d3.max(heights);
+          let min_height = d3.min(heights);
+          console.log(max_height, min_height);
           // three height ranges are: 1) 69-74, 75-80, 81-87
           let heightranges= {}
           var count = 0;
@@ -272,18 +274,18 @@
 
           let imgwidth1 = 200;
           let imgwidth2 = 300;
-          let imgwidth3 = 400;
+          let imgwidth3 = 300;
 
           let xscale= d3.scaleLinear()
             .domain([0, maxblkstl])
             .range([0, imgwidth1]);
 
           let xscale2= d3.scaleLinear()
-            .domain([0, maxblkstl])
+            .domain([0, maxblkstl2])
             .range([0, imgwidth2]);
 
           let xscale3= d3.scaleLinear()
-            .domain([0, maxblkstl])
+            .domain([0, maxblkstl3])
             .range([0, imgwidth3]);
 
           d3.select("rect#blue").attr("width", xscale(heightrange['69-74']['totalblocks'])); //blue is for blocks
