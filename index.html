@@ -21,7 +21,7 @@
         <rect id="blue2" height="400" width="" style="stroke: none; fill:blue"/>
         <image height="400" width="200" xlink:href="personoutlinepic_copy.png"/>
       </svg>
-
+      <br/><br/>
       <svg id="person3" height="500" width= "400">
         <rect height="500" width="300" style="stroke: none; fill:red"/>
         <rect id="blue3" height="500" width="200" style="stroke: none; fill:blue"/>
@@ -29,7 +29,7 @@
       </svg>
     </div>
 
-    <svg id="pie" height="600" width="600"></svg>
+    <svg id="pie" height="700" width=800"></svg>
     <p>
       <script>
 
@@ -297,14 +297,33 @@
           d3.select("rect#blue3").attr("width", xscale3(heightrange['84-89']['totalblocks']));
 
           //PIE
-          let radius = 300;
-          let arc = d3.svg.arc().innerRadius(radius - 100).outerRadius(radius - 20);
+          heights_count = {}
+          for(i = 0; i < heights.length; i++) {
+            if (heights_count[heights[i]]) {
+              heights_count[heights[i]] += 1;
+            } else {
+              heights_count[heights[i]] = 1;
+            }
+          }
+          let counts = d3.entries(heights_count);
+          console.log(counts);
+
+          let svg = d3.select("svg#pie");
+          let radius = 250;
+          let arc = d3.arc()
+                      .innerRadius(radius - 90)
+                      .outerRadius(radius - 20)
+                      .cornerRadius(2)
+                      .padAngle(0.005);
           let colorScale = d3.scaleOrdinal(d3.schemeCategory10);
-          let donutChart = d3.select("svg#pie");
-          let donutLayer = d3.layout.pie();
+          let donutLayer = d3.pie().value(function(d) {return d.value;}).sort(null);
           svg.append("g")
-              .datum(heights)
-              .attr("fill", function(d, i) {return colorScale(i);})
+              .attr("transform", "translate(550,350)")
+              .selectAll("arc")
+              .data(donutLayer(counts))
+              .enter()
+              .append("path")
+              .attr("fill", function(d, i) {return colorScale(d.data.key); })
               .attr("d", arc);
         });
       </script>
