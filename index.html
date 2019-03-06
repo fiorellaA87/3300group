@@ -92,6 +92,10 @@
             })
           });
 
+          top_seventyfive['DeMarcus Cousins']['BPG'] = 1.3272727272727274
+          top_seventyfive['DeMarcus Cousins']['SPG'] = 0.8426492893657659
+          top_seventyfive['Serge Ibaka']['BPG'] = 1.625
+          top_seventyfive['Serge Ibaka']['SPG'] = 0.3751795645509482
           //BAR GRAPH
           let bar_chart = d3.select("svg#bar_chart");
           let chart = bar_chart.append("g").attr("transform", "translate(130,63)");
@@ -251,7 +255,7 @@
               heightrange['84-89']= {'totalsteals': totsteal3, 'totalblocks': totblock3, 'count': count3}
             }
           }
-          console.log(heightrange);
+          // console.log(heightrange);
 
           //Steal and block percents for height range 69-74
           let maxblkstl = Math.round(heightrange['72-77']['totalblocks'] + heightrange['72-77']['totalsteals']);
@@ -272,16 +276,16 @@
           let maxblkstl3 = Math.round(heightrange['84-89']['totalsteals'] + heightrange['84-89']['totalblocks'])
           let stlperc3 = Math.round((heightrange['84-89']['totalsteals'] / maxblkstl3) * 100);
           let blkperc3 = Math.round((heightrange['84-89']['totalblocks'] / maxblkstl3) * 100);
-          console.log(stlperc3, blkperc3, maxblkstl3);
+          // console.log(stlperc3, blkperc3, maxblkstl3);
 
 
           let imgwidth1 = 200;
           let imgwidth2 = 300;
           let imgwidth3 = 300;
 
-          console.log(blkperc1);
-          console.log(blkperc2);
-          console.log(blkperc3);
+          // console.log(blkperc1);
+          // console.log(blkperc2);
+          // console.log(blkperc3);
 
 
 
@@ -375,7 +379,7 @@
             }
           }
           let counts = d3.entries(heights_count);
-          console.log(counts);
+          // console.log(counts);
 
           let svg = d3.select("svg#pie");
           let radius = 250;
