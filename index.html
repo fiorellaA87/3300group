@@ -374,9 +374,17 @@
               heights_count[heights[i]] = 1;
             }
           }
-          let counts = d3.entries(heights_count);
-          console.log(counts);
+          let counts = [];
 
+          for(i in heights_count) {
+            let variable = {
+              "key": i,
+              "value": heights_count[i]
+            }
+            counts.push(variable);
+          }
+
+          console.log(counts);
           let svg = d3.select("svg#pie");
           let radius = 250;
           let arc = d3.arc()
@@ -384,16 +392,61 @@
                       .outerRadius(radius - 20)
                       .cornerRadius(2)
                       .padAngle(0.005);
+          let out_arc = d3.arc()
+                      .innerRadius(radius * 1.2)
+                      .outerRadius(radius * 1.2)
           let colorScale = d3.scaleOrdinal(d3.schemeCategory10);
           let donutLayer = d3.pie().value(function(d) {return d.value;}).sort(null);
           svg.append("g")
-              .attr("transform", "translate(550,350)")
+              .attr("transform", "translate(350,350)")
               .selectAll("arc")
               .data(donutLayer(counts))
               .enter()
               .append("path")
               .attr("fill", function(d, i) {return colorScale(d.data.key); })
               .attr("d", arc);
+
+          svg.selectAll('polyline')
+              .data(donutLayer(counts))
+              .enter()
+              .append('polyline')
+              .attr('points', function(d) {
+                let position = out_arc.centroid(d);
+                let angle = d.startAngle + (d.endAngle - d.startAngle)/2;
+                let location = 1;
+                if (angle > Math.PI) {
+                  location = -1;
+                }
+                  position[0] = radius * location;
+                  return [arc.centroid(d), out_arc.centroid(d), position];
+                })
+                .attr("transform", "translate(350,350)")
+                .style("fill", "none")
+                .style("stroke", "black")
+                .style("opacity", "0.4")
+                .style("stroke-width", "3px");
+            
+          svg.selectAll('text')
+              .data(donutLayer(counts))
+              .enter()
+              .append("text")
+              .attr("text-anchor", "middle")
+              .attr("transform", function (d) {
+                let position = out_arc.centroid(d);
+                let angle = d.startAngle + (d.endAngle - d.startAngle)/2;
+                let location = 1;
+                if (angle > Math.PI) {
+                  location = -1;
+                }
+                  position[0] = radius * location;
+                  position[0] += 350;
+                  position[1] += 340;
+                  return "translate(" + position + ")";
+                })
+                .text(function (d) {
+                  console.log(d);
+                  return "Height is: " + d.data.key + " inches (" + d.value + ")"
+                })
         });
       </script>
     </p>
